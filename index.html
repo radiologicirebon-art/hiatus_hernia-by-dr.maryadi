@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hiatus Hernia — CT Imaging | Mitra Plumbon Hospital</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #04080f;
+  --surface: #060d1a;
+  --surface2: #0b1629;
+  --border: rgba(60,110,200,0.18);
+  --border-bright: rgba(80,140,255,0.35);
+  --blue: #4d8ff5;
+  --blue-dim: #2a5cba;
+  --teal: #3dd6a8;
+  --amber: #f0b429;
+  --red: #e8553a;
+  --text: #d8e8ff;
+  --text-dim: rgba(180,210,255,0.5);
+  --text-faint: rgba(130,170,220,0.3);
+  --mono: 'JetBrains Mono', monospace;
+  --serif: 'DM Serif Display', serif;
+  --sans: 'Instrument Sans', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  font-family: var(--sans);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+@keyframes pulse-ring {
+  0%,100% { opacity: 0.4; transform: scale(1); }
+  50%      { opacity: 0.8; transform: scale(1.04); }
+}
+@keyframes glow {
+  0%,100% { text-shadow: 0 0 20px rgba(77,143,245,0.4); }
+  50%      { text-shadow: 0 0 40px rgba(77,143,245,0.8), 0 0 80px rgba(77,143,245,0.3); }
+}
+@keyframes flicker {
+  0%,98%,100% { opacity:1; }
+  99% { opacity:0.8; }
+}
+@keyframes barGrow {
+  from { transform: scaleY(0); transform-origin: bottom; }
+  to   { transform: scaleY(1); transform-origin: bottom; }
+}
+@keyframes drift {
+  0%,100% { transform: translateY(0px); }
+  50%      { transform: translateY(-4px); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ─── NOISE TEXTURE ─── */
+.poster {
+  max-width: 960px;
+  margin: 0 auto;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+.poster::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+  opacity:0.6;
+}
+
+/* ─── SCANLINE EFFECT ─── */
+.poster::after {
+  content:'';
+  position:fixed; left:0; top:0; right:0; height:2px;
+  background: linear-gradient(transparent, rgba(77,143,245,0.06), transparent);
+  animation: scanline 8s linear infinite;
+  pointer-events:none;
+  z-index:1;
+}
+
+/* ─── HEADER ─── */
+.header {
+  background: linear-gradient(160deg, #050e22 0%, #08142e 50%, #060d1e 100%);
+  padding: 0;
+  border-bottom: 1px solid var(--border-bright);
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.6s ease both;
+}
+
+.header-bg-grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(77,143,245,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(77,143,245,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.header-accent {
+  position:absolute;
+  width:400px; height:400px;
+  background: radial-gradient(circle, rgba(77,143,245,0.12) 0%, transparent 70%);
+  right:-100px; top:-100px;
+  pointer-events:none;
+}
+.header-accent2 {
+  position:absolute;
+  width:300px; height:300px;
+  background: radial-gradient(circle, rgba(61,214,168,0.08) 0%, transparent 70%);
+  left:-50px; bottom:-80px;
+  pointer-events:none;
+}
+
+.header-inner {
+  position:relative; z-index:2;
+  padding: 32px 48px 28px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: start;
+}
+
+.header-left {}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 9px; font-weight:700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 10px;
+  display:flex; align-items:center; gap:8px;
+}
+.eyebrow::before {
+  content:'';
+  width:24px; height:1px;
+  background: var(--teal);
+  display:inline-block;
+}
+
+.main-title {
+  font-family: var(--serif);
+  font-size: 52px;
+  font-weight: 400;
+  line-height: 1.0;
+  color: #fff;
+  margin-bottom: 6px;
+  animation: glow 4s ease-in-out infinite;
+}
+.main-title em {
+  font-style: italic;
+  color: var(--blue);
+  display:inline-block;
+}
+
+.subtitle {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 0.3px;
+  margin-bottom: 20px;
+}
+
+.case-chip {
+  display: inline-flex; align-items:center; gap:10px;
+  background: rgba(61,214,168,0.06);
+  border: 1px solid rgba(61,214,168,0.25);
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: var(--teal);
+  font-family: var(--sans);
+  font-weight:500;
+}
+.case-chip-dot {
+  width:6px; height:6px; border-radius:50%;
+  background: var(--teal);
+  animation: pulse-ring 2s ease-in-out infinite;
+  flex-shrink:0;
+}
+
+.presenter-block {
+  text-align:right;
+  border-left: 1px solid var(--border);
+  padding-left: 24px;
+}
+.presenter-lbl {
+  font-family: var(--mono);
+  font-size: 8px; letter-spacing:2px; text-transform:uppercase;
+  color: var(--text-faint); margin-bottom:4px;
+}
+.presenter-name {
+  font-family: var(--sans);
+  font-size: 13px; font-weight:600;
+  color: rgba(180,210,255,0.8);
+  white-space:nowrap;
+}
+.presenter-role {
+  font-family: var(--mono);
+  font-size: 9px; color: var(--text-faint);
+  margin-top:2px;
+}
+
+/* ─── ALERT STRIP ─── */
+.alert-strip {
+  background: linear-gradient(90deg, rgba(232,85,58,0.08) 0%, rgba(232,85,58,0.04) 100%);
+  border-left: 3px solid var(--red);
+  border-top: 1px solid rgba(232,85,58,0.12);
+  border-bottom: 1px solid rgba(232,85,58,0.12);
+  padding: 13px 48px;
+  display:flex; align-items:center; gap:12px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+.alert-icon {
+  font-size:14px; flex-shrink:0;
+}
+.alert-text {
+  font-family: var(--sans);
+  font-size: 13px; font-style:italic;
+  color: #f5a090;
+  line-height:1.4;
+}
+.alert-text strong { color:#ff9070; font-style:normal; }
+
+/* ─── CONTENT ─── */
+.content {
+  padding: 32px 48px;
+  position:relative; z-index:2;
+}
+
+/* ─── SECTION HEADER ─── */
+.sec-head {
+  display:flex; align-items:center; gap:12px;
+  margin-bottom: 18px;
+}
+.sec-number {
+  font-family: var(--mono);
+  font-size: 9px; font-weight:700;
+  color: var(--blue-dim);
+  background: rgba(77,143,245,0.08);
+  border: 1px solid rgba(77,143,245,0.15);
+  padding: 3px 8px; border-radius:3px;
+  letter-spacing:1px;
+}
+.sec-title {
+  font-family: var(--mono);
+  font-size: 10px; font-weight:700;
+  letter-spacing:2px; text-transform:uppercase;
+  color: var(--blue);
+}
+.sec-line {
+  flex:1; height:1px;
+  background: linear-gradient(90deg, rgba(77,143,245,0.25), transparent);
+}
+
+/* ─── EPI SECTION ─── */
+.epi-row {
+  display:grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap:16px;
+  margin-bottom:28px;
+  animation: fadeUp 0.6s 0.15s ease both;
+}
+
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  position:relative; overflow:hidden;
+}
+.chart-card::after {
+  content:'';
+  position:absolute; inset:0;
+  background: linear-gradient(135deg, rgba(77,143,245,0.03) 0%, transparent 60%);
+  pointer-events:none;
+}
+
+.chart-label {
+  font-family: var(--mono);
+  font-size: 10px; color: var(--text-dim);
+  margin-bottom:14px;
+}
+
+.bar-wrap {
+  display:flex; align-items:flex-end; gap:8px;
+  height:120px;
+  padding-bottom:4px;
+}
+.bar-col-new {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:5px;
+}
+.bar-new {
+  width:100%; border-radius:3px 3px 0 0;
+  display:flex; align-items:flex-start; justify-content:center;
+  padding-top:5px;
+  animation: barGrow 1s cubic-bezier(0.34,1.56,0.64,1) both;
+  position:relative; overflow:hidden;
+}
+.bar-new::after {
+  content:'';
+  position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 40%);
+}
+.bar-val-new {
+  font-family: var(--mono);
+  font-size: 9px; font-weight:700;
+  color:rgba(255,255,255,0.9); z-index:1; position:relative;
+}
+.bar-lbl-new {
+  font-family: var(--mono);
+  font-size: 9px; color: var(--text-faint); text-align:center;
+}
+
+.stats-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius:12px;
+  padding: 20px 22px;
+  display:flex; flex-direction:column; justify-content:space-around;
+  gap:0;
+}
+.stat-row {
+  display:flex; align-items:center; gap:14px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(60,110,200,0.08);
+}
+.stat-row:last-child { border-bottom:none; }
+.stat-num-big {
+  font-family: var(--serif);
+  font-size: 30px; min-width:72px; text-align:center; line-height:1;
+}
+.stat-num-big.c-blue { color: var(--blue); }
+.stat-num-big.c-teal { color: var(--teal); }
+.stat-num-big.c-amber { color: var(--amber); }
+.stat-label { font-size:12px; font-weight:600; color:rgba(200,220,255,0.85); margin-bottom:2px; }
+.stat-sub { font-family:var(--mono); font-size:10px; color: var(--text-faint); }
+
+/* ─── CT SECTION ─── */
+.ct-section {
+  margin-bottom:28px;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+.ct-grid-new {
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+}
+
+.ct-panel-new {
+  background: #000;
+  border: 1px solid rgba(60,110,200,0.25);
+  border-radius:10px;
+  overflow:hidden;
+  position:relative;
+  transition: border-color 0.2s;
+}
+.ct-panel-new:hover {
+  border-color: rgba(80,140,255,0.45);
+}
+
+.ct-screen-new {
+  background: #030608;
+  padding: 6px;
+  position:relative;
+}
+.ct-screen-new svg { display:block; width:100%; }
+
+.ct-bar {
+  background: rgba(6,18,40,0.95);
+  padding: 8px 14px;
+  display:flex; justify-content:space-between; align-items:center;
+  border-top: 1px solid rgba(60,110,200,0.15);
+}
+.ct-bar-label {
+  font-family: var(--mono);
+  font-size: 9px; font-weight:700;
+  letter-spacing:1.5px; text-transform:uppercase;
+}
+.ct-bar-label.blue { color: var(--blue); }
+.ct-bar-label.teal { color: var(--teal); }
+.ct-bar-label.amber { color: var(--amber); }
+
+.ct-badge-new {
+  font-family: var(--mono);
+  font-size: 9px; padding:2px 8px; border-radius:10px;
+  background: rgba(77,143,245,0.12);
+  color: rgba(120,170,255,0.8);
+  border: 1px solid rgba(77,143,245,0.2);
+  letter-spacing:0.5px;
+}
+.ct-badge-new.teal { background:rgba(61,214,168,0.12); color:var(--teal); border-color:rgba(61,214,168,0.2); }
+.ct-badge-new.amber { background:rgba(240,180,41,0.12); color:var(--amber); border-color:rgba(240,180,41,0.2); }
+
+.ct-ann-bar {
+  background: rgba(4,10,22,0.7);
+  padding: 8px 14px;
+  border-top: 1px solid rgba(60,110,200,0.1);
+}
+.ct-ann-row {
+  display:flex; align-items:flex-start; gap:7px;
+  font-family: var(--mono);
+  font-size:10px; color:rgba(160,195,255,0.6);
+  padding: 2px 0;
+}
+.ct-dot { width:5px; height:5px; border-radius:50%; margin-top:4px; flex-shrink:0; }
+
+/* ─── WIDE CT PANEL ─── */
+.ct-panel-wide {
+  background:#000;
+  border: 1px solid rgba(60,110,200,0.25);
+  border-radius:10px; overflow:hidden;
+  grid-column:1/-1; margin-top:4px;
+  transition: border-color 0.2s;
+}
+.ct-panel-wide:hover { border-color: rgba(80,140,255,0.45); }
+
+.ct-wide-inner {
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.ct-wide-col {
+  border-right: 1px solid rgba(60,110,200,0.15);
+}
+.ct-wide-col:last-child { border-right:none; }
+
+/* ─── CT SUMMARY ─── */
+.ct-summary {
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:10px; margin-top:12px;
+}
+.ct-sum-card {
+  background: rgba(8,18,40,0.7);
+  border: 1px solid var(--border);
+  border-radius:8px; padding:12px 14px;
+  position:relative; overflow:hidden;
+}
+.ct-sum-card::before {
+  content:'';
+  position:absolute; left:0; top:0; bottom:0; width:3px;
+}
+.ct-sum-card.b-blue::before { background:var(--blue); }
+.ct-sum-card.b-teal::before { background:var(--teal); }
+.ct-sum-card.b-amber::before { background:var(--amber); }
+
+.ct-sum-title {
+  font-family:var(--mono); font-size:9px; font-weight:700;
+  letter-spacing:1px; text-transform:uppercase; margin-bottom:5px;
+}
+.ct-sum-title.blue { color:var(--blue); }
+.ct-sum-title.teal { color:var(--teal); }
+.ct-sum-title.amber { color:var(--amber); }
+
+.ct-sum-text {
+  font-size:11px; color:rgba(170,200,255,0.6); line-height:1.55;
+}
+
+/* ─── TYPES ─── */
+.types-section {
+  margin-bottom:28px;
+  animation: fadeUp 0.6s 0.25s ease both;
+}
+
+.types-grid-new {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+}
+
+.type-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius:10px;
+  padding: 16px 18px;
+  display:grid; grid-template-columns:auto 1fr; gap:14px;
+  align-items:start;
+  transition: border-color 0.2s, background 0.2s;
+}
+.type-card:hover {
+  border-color: rgba(80,140,255,0.3);
+  background: rgba(10,24,55,0.9);
+}
+
+.type-num {
+  font-family: var(--serif);
+  font-size: 36px;
+  line-height:1;
+  color: rgba(77,143,245,0.18);
+  font-style:italic;
+  min-width:36px;
+}
+.type-num.dom { color:rgba(61,214,168,0.22); }
+
+.type-body {}
+.type-tag {
+  font-family:var(--mono);
+  font-size:8px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+  color: var(--blue-dim); margin-bottom:6px;
+  display:inline-flex; align-items:center; gap:5px;
+}
+.type-tag.dom { color:var(--teal); }
+.type-tag::after { content:''; width:12px; height:1px; background:currentColor; display:inline-block; opacity:0.5; }
+.type-name-new { font-size:13px; font-weight:600; color: rgba(200,220,255,0.9); margin-bottom:4px; }
+.type-desc-new { font-size:11.5px; color:var(--text-dim); line-height:1.55; }
+
+/* ─── BOTTOM 3-COL ─── */
+.bottom-row {
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;
+  margin-bottom:28px;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+
+.bot-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius:10px; padding:16px 18px;
+}
+
+.info-row {
+  display:flex; gap:10px; align-items:flex-start;
+  margin-bottom:10px;
+}
+.info-row:last-child { margin-bottom:0; }
+.info-dot { width:4px; height:4px; border-radius:50%; margin-top:7px; flex-shrink:0; }
+.info-dot.blue { background:var(--blue); }
+.info-dot.teal { background:var(--teal); }
+.info-dot.amber { background:var(--amber); }
+.info-dot.red { background:var(--red); }
+.info-txt { font-size:11.5px; color:rgba(185,210,255,0.6); line-height:1.55; }
+.info-txt strong { color:rgba(210,230,255,0.85); font-weight:600; }
+
+.diff-wrap { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+.diff-chip {
+  background: rgba(232,85,58,0.07);
+  border: 1px solid rgba(232,85,58,0.18);
+  color: #f0a090;
+  font-size:11px; padding:4px 10px; border-radius:20px;
+  font-family:var(--sans);
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  background: rgba(2,6,15,0.8);
+  border-top: 1px solid var(--border);
+  padding: 16px 48px;
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:10px;
+}
+.footer-left {
+  font-size:11px; color:rgba(130,165,220,0.45); line-height:1.75;
+}
+.footer-left strong { color:rgba(160,195,240,0.75); font-weight:600; }
+.footer-right {
+  font-family:var(--mono);
+  font-size:8px; letter-spacing:2px; text-transform:uppercase;
+  color:rgba(61,214,168,0.4); text-align:right; line-height:1.8;
+}
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- ═══════════ HEADER ═══════════ -->
+  <div class="header">
+    <div class="header-bg-grid"></div>
+    <div class="header-accent"></div>
+    <div class="header-accent2"></div>
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="eyebrow">Radiology Case · Mitra Plumbon Hospital, Cirebon</div>
+        <h1 class="main-title">Hiatus <em>Hernia</em><br>— CT Imaging</h1>
+        <div class="subtitle">CT scan demonstration, epidemiology &amp; classification guide</div>
+        <div class="case-chip">
+          <div class="case-chip-dot"></div>
+          <span>Mrs. C, 49 yo — epigastric pain &amp; vomiting — inpatient</span>
+        </div>
+      </div>
+      <div class="presenter-block">
+        <div class="presenter-lbl">presented by</div>
+        <div class="presenter-name">dr. Maryadi, SpRad.K.Abdomen</div>
+        <div class="presenter-role">Radiologist · Abdomen Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ ALERT ═══════════ -->
+  <div class="alert-strip">
+    <div class="alert-icon">⚠</div>
+    <div class="alert-text">
+      <strong>"Just a reminder"</strong> — are you sure this is only GERD and persistent pharyngitis?
+    </div>
+  </div>
+
+  <!-- ═══════════ CONTENT ═══════════ -->
+  <div class="content">
+
+    <!-- ── 01 EPIDEMIOLOGY ── -->
+    <div class="sec-head">
+      <div class="sec-number">01</div>
+      <div class="sec-title">Epidemiology — Prevalence by Age Group</div>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="epi-row">
+      <!-- Bar Chart -->
+      <div class="chart-card">
+        <div class="chart-label">Hiatus hernia prevalence (%) by age group</div>
+        <div class="bar-wrap" id="barWrap">
+          <div class="bar-col-new">
+            <div class="bar-new" style="height:15%;background:linear-gradient(180deg,#1d4ba8,#143580);animation-delay:0.1s"><span class="bar-val-new">~5%</span></div>
+            <div class="bar-lbl-new">&lt;30</div>
+          </div>
+          <div class="bar-col-new">
+            <div class="bar-new" style="height:24%;background:linear-gradient(180deg,#1e5ab8,#163d90);animation-delay:0.15s"><span class="bar-val-new">~10%</span></div>
+            <div class="bar-lbl-new">30–40</div>
+          </div>
+          <div class="bar-col-new">
+            <div class="bar-new" style="height:36%;background:linear-gradient(180deg,#2667cc,#1a4aaa);animation-delay:0.2s"><span class="bar-val-new">~20%</span></div>
+            <div class="bar-lbl-new">40–50</div>
+          </div>
+          <div class="bar-col-new">
+            <div class="bar-new" style="height:54%;background:linear-gradient(180deg,#3278e0,#2260c8);animation-delay:0.25s"><span class="bar-val-new">~30%</span></div>
+            <div class="bar-lbl-new">50–60</div>
+          </div>
+          <div class="bar-col-new">
+            <div class="bar-new" style="height:72%;background:linear-gradient(180deg,#3dd6a8,#28a880);animation-delay:0.3s"><span class="bar-val-new">~40%</span></div>
+            <div class="bar-lbl-new">60–70</div>
+          </div>
+          <div class="bar-col-new">
+            <div class="bar-new" style="height:92%;background:linear-gradient(180deg,#3dd6a8,#24c090);box-shadow:0 0 12px rgba(61,214,168,0.35);animation-delay:0.35s"><span class="bar-val-new">~50%</span></div>
+            <div class="bar-lbl-new">&gt;70</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:10px;">
+          <span style="display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;color:var(--text-faint);">
+            <span style="width:8px;height:8px;border-radius:2px;background:#2667cc;display:inline-block;"></span>Below 50 yrs
+          </span>
+          <span style="display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;color:var(--text-faint);">
+            <span style="width:8px;height:8px;border-radius:2px;background:#3dd6a8;display:inline-block;"></span>Above 60 yrs (high risk)
+          </span>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-card">
+        <div class="stat-row">
+          <div class="stat-num-big c-blue">~10%</div>
+          <div>
+            <div class="stat-label">Under age 40</div>
+            <div class="stat-sub">Low prevalence, often incidental</div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-num-big c-teal">30–50%</div>
+          <div>
+            <div class="stat-label">Over age 50–70</div>
+            <div class="stat-sub">Significant increase with age</div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-num-big c-amber" style="font-size:26px;">♀</div>
+          <div>
+            <div class="stat-label">Slight female predilection</div>
+            <div class="stat-sub">More common in women</div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-num-big c-blue" style="font-size:22px;">49yr</div>
+          <div>
+            <div class="stat-label">This patient — Mrs. C</div>
+            <div class="stat-sub">At-risk age group, symptomatic</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 02 CT IMAGING ── -->
+    <div class="ct-section">
+      <div class="sec-head">
+        <div class="sec-number">02</div>
+        <div class="sec-title">CT Imaging — Axial · Sagittal · Coronal · 3D Reconstruction</div>
+        <div class="sec-line"></div>
+      </div>
+
+      <div class="ct-grid-new">
+
+        <!-- AXIAL -->
+        <div class="ct-panel-new">
+          <div class="ct-screen-new">
+            <svg viewBox="0 0 260 195">
+              <rect width="260" height="195" fill="#050a10"/>
+              <!-- body -->
+              <ellipse cx="130" cy="97" rx="118" ry="88" fill="#111820" stroke="#1a2a3a" stroke-width="0.5"/>
+              <!-- vertebra -->
+              <ellipse cx="130" cy="145" rx="18" ry="12" fill="#c8d8f0" opacity="0.9"/>
+              <rect x="122" y="133" width="16" height="8" rx="2" fill="#c8d8f0" opacity="0.7"/>
+              <ellipse cx="130" cy="138" rx="8" ry="6" fill="#0a1020" opacity="0.9"/>
+              <!-- aorta -->
+              <circle cx="110" cy="128" r="8" fill="none" stroke="#e05a3a" stroke-width="1.5" opacity="0.8"/>
+              <circle cx="110" cy="128" r="5" fill="#c04030" opacity="0.5"/>
+              <!-- IVC -->
+              <ellipse cx="148" cy="130" rx="7" ry="6" fill="#3050a0" opacity="0.5"/>
+              <!-- herniated stomach -->
+              <ellipse cx="130" cy="68" rx="42" ry="35" fill="#1e3a18" stroke="#4a8a38" stroke-width="1.2" opacity="0.9"/>
+              <ellipse cx="130" cy="65" rx="32" ry="24" fill="#152810" opacity="0.75"/>
+              <!-- air bubble -->
+              <ellipse cx="118" cy="60" rx="12" ry="9" fill="#050a05" opacity="0.9"/>
+              <!-- glow on stomach -->
+              <ellipse cx="130" cy="68" rx="42" ry="35" fill="none" stroke="#3dd6a8" stroke-width="0.5" opacity="0.3" stroke-dasharray="4,4"/>
+              <!-- diaphragm -->
+              <path d="M12 105 Q65 92 105 98 Q115 100 130 103 Q145 100 155 98 Q195 92 248 105" fill="none" stroke="#8ab0d0" stroke-width="1.5" opacity="0.55" stroke-dasharray="5,4"/>
+              <!-- ribs -->
+              <path d="M14 75 Q40 65 70 80" fill="none" stroke="#a0b8d0" stroke-width="1.2" opacity="0.45"/>
+              <path d="M246 75 Q220 65 190 80" fill="none" stroke="#a0b8d0" stroke-width="1.2" opacity="0.45"/>
+              <path d="M12 90 Q38 78 72 92" fill="none" stroke="#a0b8d0" stroke-width="1" opacity="0.35"/>
+              <path d="M248 90 Q222 78 188 92" fill="none" stroke="#a0b8d0" stroke-width="1" opacity="0.35"/>
+              <!-- heart -->
+              <ellipse cx="100" cy="82" rx="22" ry="18" fill="#3a1a1a" stroke="#884444" stroke-width="0.8" opacity="0.7"/>
+              <!-- annotations -->
+              <line x1="172" y1="68" x2="198" y2="52" stroke="#3dd6a8" stroke-width="0.8" stroke-dasharray="3,2"/>
+              <text x="200" y="50" fill="#3dd6a8" font-size="8" font-family="'JetBrains Mono',monospace">Herniated</text>
+              <text x="200" y="60" fill="#3dd6a8" font-size="8" font-family="'JetBrains Mono',monospace">stomach</text>
+              <line x1="90" y1="103" x2="62" y2="120" stroke="#f0b429" stroke-width="0.8" stroke-dasharray="3,2"/>
+              <text x="8" y="130" fill="#f0b429" font-size="8" font-family="'JetBrains Mono',monospace">Diaphragm</text>
+              <!-- meta -->
+              <text x="6" y="12" fill="rgba(150,180,220,0.5)" font-size="7" font-family="'JetBrains Mono',monospace">CT-2512-768797</text>
+              <text x="6" y="21" fill="rgba(150,180,220,0.5)" font-size="7" font-family="'JetBrains Mono',monospace">AXIAL · W:400 L:40</text>
+              <text x="254" y="12" fill="rgba(150,180,220,0.5)" font-size="7" font-family="'JetBrains Mono',monospace" text-anchor="end">09/12/2025</text>
+              <text x="254" y="21" fill="rgba(150,180,220,0.5)" font-size="7" font-family="'JetBrains Mono',monospace" text-anchor="end">5.0mm</text>
+              <!-- scale -->
+              <line x1="210" y1="182" x2="250" y2="182" stroke="rgba(180,200,230,0.4)" stroke-width="1"/>
+              <text x="230" y="192" fill="rgba(150,180,220,0.4)" font-size="7" font-family="'JetBrains Mono',monospace" text-anchor="middle">5 cm</text>
+              <!-- corner markers -->
+              <text x="6" y="192" fill="rgba(77,143,245,0.4)" font-size="7" font-family="'JetBrains Mono',monospace">A</text>
+              <text x="250" y="192" fill="rgba(77,143,245,0.4)" font-size="7" font-family="'JetBrains Mono',monospace">P</text>
+            </svg>
+          </div>
+          <div class="ct-bar">
+            <span class="ct-bar-label blue">Axial view</span>
+            <span class="ct-badge-new">W400/L40</span>
+          </div>
+          <div class="ct-ann-bar">
+            <div class="ct-ann-row"><div class="ct-dot" style="background:#3dd6a8"></div>Herniasi lambung ke atas diafragma</div>
+            <div class="ct-ann-row"><div class="ct-dot" style="background:#f0b429"></div>Crura diafragma — separasi &gt;15mm</div>
+          </div>
+        </div>
+
+        <!-- CORONAL -->
+        <div class="ct-panel-new">
+          <div class="ct-screen-new">
+            <svg viewBox="0 0 260 195">
+              <rect width="260" height="195" fill="#050a10"/>
+              <ellipse cx="130" cy="97" rx="105" ry="88" fill="#0d1520" stroke="#1a2a3a" stroke-width="0.5"/>
+              <!-- spine -->
+              <rect x="122" y="25" width="16" height="145" rx="3" fill="#b0c8e8" opacity="0.18"/>
+              <rect x="125" y="30" width="10" height="8" rx="2" fill="#c8d8f0" opacity="0.8"/>
+              <rect x="125" y="45" width="10" height="8" rx="2" fill="#c8d8f0" opacity="0.78"/>
+              <rect x="125" y="60" width="10" height="8" rx="2" fill="#c8d8f0" opacity="0.75"/>
+              <rect x="125" y="75" width="10" height="8" rx="2" fill="#c8d8f0" opacity="0.68"/>
+              <rect x="125" y="90" width="10" height="8" rx="2" fill="#c8d8f0" opacity="0.6"/>
+              <rect x="125" y="105" width="10" height="8" rx="2" fill="#c8d8f0" opacity="0.58"/>
+              <rect x="125" y="120" width="10" height="8" rx="2" fill="#c8d8f0" opacity="0.55"/>
+              <rect x="125" y="135" width="10" height="8" rx="2" fill="#c8d8f0" opacity="0.5"/>
+              <rect x="125" y="150" width="10" height="8" rx="2" fill="#c8d8f0" opacity="0.45"/>
+              <!-- diaphragm -->
+              <line x1="25" y1="100" x2="235" y2="100" stroke="#8ab0d0" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.5"/>
+              <!-- heart -->
+              <ellipse cx="90" cy="70" rx="38" ry="32" fill="#2a1010" stroke="#703030" stroke-width="1" opacity="0.8"/>
+              <ellipse cx="88" cy="68" rx="24" ry="20" fill="#3a1818" opacity="0.55"/>
+              <!-- stomach herniated -->
+              <ellipse cx="155" cy="72" rx="30" ry="25" fill="#1e3a1e" stroke="#4a8a38" stroke-width="1.2" opacity="0.9"/>
+              <ellipse cx="158" cy="69" rx="20" ry="16" fill="#0f2010" opacity="0.75"/>
+              <!-- glowing ring -->
+              <ellipse cx="155" cy="72" rx="30" ry="25" fill="none" stroke="#3dd6a8" stroke-width="0.5" opacity="0.25" stroke-dasharray="4,4"/>
+              <!-- esophagus -->
+              <rect x="147" y="20" width="10" height="50" rx="4" fill="#2a4030" stroke="#4a8a38" stroke-width="0.8" opacity="0.7"/>
+              <!-- stomach below -->
+              <ellipse cx="170" cy="128" rx="28" ry="22" fill="#1e3a1e" stroke="#3a6a3a" stroke-width="1" opacity="0.65"/>
+              <!-- liver -->
+              <ellipse cx="75" cy="125" rx="42" ry="28" fill="#2a1a08" stroke="#5a3a15" stroke-width="0.8" opacity="0.8"/>
+              <!-- annotations -->
+              <line x1="185" y1="72" x2="218" y2="50" stroke="#3dd6a8" stroke-width="0.8" stroke-dasharray="3,2"/>
+              <text x="220" y="48" fill="#3dd6a8" font-size="8" font-family="'JetBrains Mono',monospace">Gastric</text>
+              <text x="220" y="58" fill="#3dd6a8" font-size="8" font-family="'JetBrains Mono',monospace">fundus</text>
+              <line x1="152" y1="40" x2="108" y2="28" stroke="#4d8ff5" stroke-width="0.8" stroke-dasharray="3,2"/>
+              <text x="8" y="26" fill="#4d8ff5" font-size="8" font-family="'JetBrains Mono',monospace">Esoph.</text>
+              <line x1="90" y1="100" x2="55" y2="115" stroke="#f0b429" stroke-width="0.8" stroke-dasharray="3,2"/>
+              <text x="8" y="113" fill="#f0b429" font-size="8" font-family="'JetBrains Mono',monospace">Diaphragm</text>
+              <text x="6" y="12" fill="rgba(150,180,220,0.5)" font-size="7" font-family="'JetBrains Mono',monospace">CORONAL · 2.5mm</text>
+              <text x="254" y="12" fill="rgba(150,180,220,0.5)" font-size="7" font-family="'JetBrains Mono',monospace" text-anchor="end">09/12/2025</text>
+              <text x="6" y="192" fill="rgba(77,143,245,0.4)" font-size="7" font-family="'JetBrains Mono',monospace">R</text>
+              <text x="248" y="192" fill="rgba(77,143,245,0.4)" font-size="7" font-family="'JetBrains Mono',monospace">L</text>
+            </svg>
+          </div>
+          <div class="ct-bar">
+            <span class="ct-bar-label teal">Coronal view</span>
+            <span class="ct-badge-new teal">2.5mm slice</span>
+          </div>
+          <div class="ct-ann-bar">
+            <div class="ct-ann-row"><div class="ct-dot" style="background:#3dd6a8"></div>Fundus lambung herniasi — di atas diafragma</div>
+            <div class="ct-ann-row"><div class="ct-dot" style="background:#4d8ff5"></div>Esofagus — GEJ terdisplasi ke cranial</div>
+          </div>
+        </div>
+
+        <!-- SAGITTAL + 3D WIDE -->
+        <div class="ct-panel-wide">
+          <div class="ct-wide-inner">
+            <!-- Sagittal -->
+            <div class="ct-wide-col">
+              <div class="ct-screen-new">
+                <svg viewBox="0 0 280 200">
+                  <rect width="280" height="200" fill="#050a10"/>
+                  <ellipse cx="140" cy="100" rx="125" ry="90" fill="#0d1520" stroke="#1a2a3a" stroke-width="0.5"/>
+                  <!-- spine -->
+                  <rect x="185" y="20" width="28" height="160" rx="4" fill="#1a2535" opacity="0.8"/>
+                  <rect x="187" y="25" width="24" height="14" rx="3" fill="#c8d8f0" opacity="0.85"/>
+                  <rect x="187" y="44" width="24" height="14" rx="3" fill="#c8d8f0" opacity="0.8"/>
+                  <rect x="187" y="63" width="24" height="14" rx="3" fill="#c8d8f0" opacity="0.75"/>
+                  <rect x="187" y="82" width="24" height="14" rx="3" fill="#c8d8f0" opacity="0.7"/>
+                  <rect x="187" y="101" width="24" height="14" rx="3" fill="#c8d8f0" opacity="0.65"/>
+                  <rect x="187" y="120" width="24" height="14" rx="3" fill="#c8d8f0" opacity="0.6"/>
+                  <rect x="187" y="139" width="24" height="14" rx="3" fill="#c8d8f0" opacity="0.55"/>
+                  <!-- diaphragm -->
+                  <path d="M18 108 Q80 95 130 100 Q155 103 175 100" fill="none" stroke="#8ab0d0" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.6"/>
+                  <!-- heart -->
+                  <ellipse cx="105" cy="72" rx="50" ry="40" fill="#2a1010" stroke="#703030" stroke-width="0.8" opacity="0.75"/>
+                  <!-- herniated stomach -->
+                  <ellipse cx="100" cy="82" rx="32" ry="26" fill="#1e3a18" stroke="#4a8a38" stroke-width="1.2" opacity="0.9"/>
+                  <ellipse cx="100" cy="80" rx="22" ry="18" fill="#0f2010" opacity="0.7"/>
+                  <ellipse cx="93" cy="74" rx="9" ry="7" fill="#050a05" opacity="0.9"/>
+                  <!-- glow -->
+                  <ellipse cx="100" cy="82" rx="32" ry="26" fill="none" stroke="#3dd6a8" stroke-width="0.5" opacity="0.2" stroke-dasharray="4,4"/>
+                  <!-- esophagus -->
+                  <path d="M135 10 Q132 40 128 65 Q126 80 120 95 Q115 108 110 108" fill="none" stroke="#4a8a38" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+                  <!-- bowel -->
+                  <ellipse cx="80" cy="148" rx="35" ry="22" fill="#1a2a1a" stroke="#3a5a3a" stroke-width="0.8" opacity="0.55"/>
+                  <ellipse cx="120" cy="155" rx="25" ry="18" fill="#1a2a1a" stroke="#3a5a3a" stroke-width="0.8" opacity="0.45"/>
+                  <!-- annotations -->
+                  <line x1="70" y1="68" x2="35" y2="48" stroke="#3dd6a8" stroke-width="0.8" stroke-dasharray="3,2"/>
+                  <text x="6" y="46" fill="#3dd6a8" font-size="8" font-family="'JetBrains Mono',monospace">Stomach</text>
+                  <text x="6" y="56" fill="#3dd6a8" font-size="8" font-family="'JetBrains Mono',monospace">fundus</text>
+                  <line x1="130" y1="103" x2="155" y2="122" stroke="#f0b429" stroke-width="0.8" stroke-dasharray="3,2"/>
+                  <text x="145" y="134" fill="#f0b429" font-size="8" font-family="'JetBrains Mono',monospace">Diaphragm</text>
+                  <text x="6" y="12" fill="rgba(150,180,220,0.5)" font-size="7" font-family="'JetBrains Mono',monospace">SAGITTAL · W:350</text>
+                  <text x="274" y="12" fill="rgba(150,180,220,0.5)" font-size="7" font-family="'JetBrains Mono',monospace" text-anchor="end">09/12/2025</text>
+                </svg>
+              </div>
+              <div class="ct-bar" style="border-top:1px solid rgba(60,110,200,0.15);">
+                <span class="ct-bar-label blue">Sagittal view</span>
+                <span class="ct-badge-new">W350/L40</span>
+              </div>
+            </div>
+
+            <!-- 3D Volume Render -->
+            <div class="ct-wide-col">
+              <div class="ct-screen-new" style="background:#030508;">
+                <svg viewBox="0 0 280 200">
+                  <rect width="280" height="200" fill="#030508"/>
+                  <!-- body silhouette -->
+                  <ellipse cx="140" cy="28" rx="22" ry="18" fill="#2a1a10" stroke="#5a3a20" stroke-width="1" opacity="0.7"/>
+                  <ellipse cx="140" cy="24" rx="18" ry="15" fill="none" stroke="#6a4a28" stroke-width="0.8" opacity="0.5"/>
+                  <!-- ribcage -->
+                  <rect x="108" y="50" width="64" height="80" rx="6" fill="#1a1208" stroke="#4a3018" stroke-width="0.5" opacity="0.5"/>
+                  <!-- ribs left -->
+                  <path d="M108 60 Q88 65 82 78" fill="none" stroke="#7a5a2a" stroke-width="1.5" opacity="0.6"/>
+                  <path d="M108 72 Q86 77 80 90" fill="none" stroke="#7a5a2a" stroke-width="1.5" opacity="0.6"/>
+                  <path d="M108 84 Q85 89 80 102" fill="none" stroke="#7a5a2a" stroke-width="1.5" opacity="0.55"/>
+                  <path d="M108 96 Q84 102 80 115" fill="none" stroke="#7a5a2a" stroke-width="1.5" opacity="0.5"/>
+                  <path d="M108 108 Q85 114 82 126" fill="none" stroke="#7a5a2a" stroke-width="1.5" opacity="0.45"/>
+                  <!-- ribs right -->
+                  <path d="M172 60 Q192 65 198 78" fill="none" stroke="#7a5a2a" stroke-width="1.5" opacity="0.6"/>
+                  <path d="M172 72 Q194 77 200 90" fill="none" stroke="#7a5a2a" stroke-width="1.5" opacity="0.6"/>
+                  <path d="M172 84 Q195 89 200 102" fill="none" stroke="#7a5a2a" stroke-width="1.5" opacity="0.55"/>
+                  <path d="M172 96 Q196 102 200 115" fill="none" stroke="#7a5a2a" stroke-width="1.5" opacity="0.5"/>
+                  <path d="M172 108 Q195 114 198 126" fill="none" stroke="#7a5a2a" stroke-width="1.5" opacity="0.45"/>
+                  <!-- spine -->
+                  <rect x="133" y="50" width="14" height="130" rx="3" fill="#3a2810" opacity="0.4"/>
+                  <!-- 3D stomach hernia -->
+                  <ellipse cx="148" cy="78" rx="28" ry="24" fill="#8B4513" opacity="0.85"/>
+                  <ellipse cx="148" cy="76" rx="20" ry="17" fill="#c86820" opacity="0.9"/>
+                  <ellipse cx="145" cy="72" rx="13" ry="10" fill="#e8901a" opacity="0.95"/>
+                  <!-- glow on 3D stomach -->
+                  <ellipse cx="148" cy="78" rx="28" ry="24" fill="none" stroke="#f0b429" stroke-width="0.8" opacity="0.4"/>
+                  <!-- bowel -->
+                  <ellipse cx="130" cy="130" rx="26" ry="20" fill="#7a5010" opacity="0.8"/>
+                  <ellipse cx="130" cy="130" rx="19" ry="14" fill="#b07018" opacity="0.85"/>
+                  <ellipse cx="155" cy="138" rx="20" ry="16" fill="#7a5010" opacity="0.75"/>
+                  <ellipse cx="155" cy="138" rx="14" ry="11" fill="#a06818" opacity="0.8"/>
+                  <ellipse cx="115" cy="152" rx="18" ry="14" fill="#8a5812" opacity="0.7"/>
+                  <ellipse cx="162" cy="155" rx="16" ry="12" fill="#8a5812" opacity="0.7"/>
+                  <!-- pelvis -->
+                  <ellipse cx="140" cy="180" rx="40" ry="18" fill="#2a1a08" stroke="#5a3018" stroke-width="1" opacity="0.6"/>
+                  <!-- annotations -->
+                  <line x1="170" y1="72" x2="212" y2="55" stroke="#f0b429" stroke-width="0.8" stroke-dasharray="3,2"/>
+                  <text x="214" y="53" fill="#f0b429" font-size="8" font-family="'JetBrains Mono',monospace">3D VR</text>
+                  <text x="214" y="63" fill="#f0b429" font-size="8" font-family="'JetBrains Mono',monospace">Hernia</text>
+                  <text x="6" y="12" fill="rgba(150,180,220,0.5)" font-size="7" font-family="'JetBrains Mono',monospace">3D VOL RENDER</text>
+                  <text x="274" y="12" fill="rgba(150,180,220,0.5)" font-size="7" font-family="'JetBrains Mono',monospace" text-anchor="end">09/12/2025</text>
+                  <text x="8" y="192" fill="rgba(61,214,168,0.45)" font-size="7" font-family="'JetBrains Mono',monospace">R</text>
+                  <text x="265" y="192" fill="rgba(61,214,168,0.45)" font-size="7" font-family="'JetBrains Mono',monospace">L</text>
+                </svg>
+              </div>
+              <div class="ct-bar" style="border-top:1px solid rgba(60,110,200,0.15);">
+                <span class="ct-bar-label amber">3D Volume Render</span>
+                <span class="ct-badge-new amber">VRT recon</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Wide annotation bar -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(60,110,200,0.12);">
+            <div style="padding:8px 14px;border-right:1px solid rgba(60,110,200,0.1);">
+              <div class="ct-ann-row"><div class="ct-dot" style="background:#f0b429"></div>GEJ terdisplasi — di atas diafragma (sagittal)</div>
+              <div class="ct-ann-row"><div class="ct-dot" style="background:#3dd6a8"></div>Esofagus terpuntir — kurva abnormal</div>
+            </div>
+            <div style="padding:8px 14px;">
+              <div class="ct-ann-row"><div class="ct-dot" style="background:#f0b429"></div>3D VR: lambung herniasi — warna oranye terang</div>
+              <div class="ct-ann-row"><div class="ct-dot" style="background:#3dd6a8"></div>Kontur diafragma melebar — hiatus &gt;15mm</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /ct-grid-new -->
+
+      <!-- CT Summary -->
+      <div class="ct-summary">
+        <div class="ct-sum-card b-blue">
+          <div class="ct-sum-title blue">Herniated organs</div>
+          <div class="ct-sum-text">Fundus lambung tervisualisasi di atas diafragma pada semua view</div>
+        </div>
+        <div class="ct-sum-card b-teal">
+          <div class="ct-sum-title teal">Widened hiatus</div>
+          <div class="ct-sum-text">Separasi crura diafragma &gt;15mm — pintu herniasi terbuka</div>
+        </div>
+        <div class="ct-sum-card b-amber">
+          <div class="ct-sum-title amber">GEJ displacement</div>
+          <div class="ct-sum-text">Gastroesophageal junction terdisplasi ke cranial — Type 3/4</div>
+        </div>
+      </div>
+
+    </div><!-- /ct-section -->
+
+    <!-- ── 03 CLASSIFICATION ── -->
+    <div class="types-section">
+      <div class="sec-head">
+        <div class="sec-number">03</div>
+        <div class="sec-title">Klasifikasi Tipe Hiatus Hernia</div>
+        <div class="sec-line"></div>
+      </div>
+
+      <div class="types-grid-new">
+        <div class="type-card">
+          <div class="type-num dom">I</div>
+          <div class="type-body">
+            <div class="type-tag dom">TYPE 1 · ~95%</div>
+            <div class="type-name-new">Sliding Hiatal Hernia</div>
+            <div class="type-desc-new">GEJ bermigrasi ke thorax melalui hiatus yang melebar. Tipe paling dominan.</div>
+          </div>
+        </div>
+        <div class="type-card">
+          <div class="type-num">II</div>
+          <div class="type-body">
+            <div class="type-tag">TYPE 2</div>
+            <div class="type-name-new">Paraesophageal Hernia</div>
+            <div class="type-desc-new">Fundus herniasi di samping esofagus; GEJ tetap di posisi normal</div>
+          </div>
+        </div>
+        <div class="type-card">
+          <div class="type-num">III</div>
+          <div class="type-body">
+            <div class="type-tag">TYPE 3</div>
+            <div class="type-name-new">Mixed / Compound</div>
+            <div class="type-desc-new">Paraesophageal + GEJ terdisplasi — <strong style="color:var(--amber)">kemungkinan pada kasus ini</strong></div>
+          </div>
+        </div>
+        <div class="type-card">
+          <div class="type-num">IV</div>
+          <div class="type-body">
+            <div class="type-tag">TYPE 4</div>
+            <div class="type-name-new">Mixed + Extra Viscera</div>
+            <div class="type-desc-new">Compound hernia disertai herniasi organ abdomen lain (usus, omentum)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 04 CLINICAL ── -->
+    <div class="sec-head">
+      <div class="sec-number">04</div>
+      <div class="sec-title">Klinis · Tatalaksana · Diagnosis Banding</div>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="bottom-row">
+      <div class="bot-card">
+        <div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(60,110,200,0.12);">Presentasi Klinis</div>
+        <div class="info-row"><div class="info-dot blue"></div><div class="info-txt">Sering <strong>asimptomatik</strong> — temuan insidental</div></div>
+        <div class="info-row"><div class="info-dot teal"></div><div class="info-txt">Nyeri epigastrik, mual, muntah <em style="color:rgba(61,214,168,0.6)">(kasus ini)</em></div></div>
+        <div class="info-row"><div class="info-dot amber"></div><div class="info-txt">Korelasi buruk dengan <strong>GERD</strong> — tidak sinonim!</div></div>
+      </div>
+      <div class="bot-card">
+        <div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(60,110,200,0.12);">Tatalaksana</div>
+        <div class="info-row"><div class="info-dot teal"></div><div class="info-txt"><strong>Bedah</strong> — untuk tipe 2–4 simptomatik. Laparoskopik fundoplikasi.</div></div>
+        <div class="info-row"><div class="info-dot amber"></div><div class="info-txt"><strong>Konservatif</strong> — lansia/komorbid tinggi, asimptomatik.</div></div>
+        <div class="info-row"><div class="info-dot red"></div><div class="info-txt"><strong>Komplikasi:</strong> volvulus gaster, tension gastrothorax</div></div>
+      </div>
+      <div class="bot-card">
+        <div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(60,110,200,0.12);">Diagnosis Banding</div>
+        <div class="diff-wrap">
+          <div class="diff-chip">Abses paru retrokardiak</div>
+          <div class="diff-chip">Empiema retrokardiak</div>
+          <div class="diff-chip">Divertikulum esofagus epifrenikus</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <div class="footer">
+    <div class="footer-left">
+      <strong>Mitra Plumbon Hospital</strong> · Cirebon<br>
+      Radiografer: Ino Hadiwinata · Lalan Permana Herlambang · Ardi Pratama Oktafiansyah<br>
+      Courtesy Mrs. C &amp; dr. Bungsu, SpPD
+    </div>
+    <div class="footer-right">
+      CT Radiology<br>
+      Abdomen Division<br>
+      · Just for reminder ·
+    </div>
+  </div>
+
+</div><!-- /poster -->
+</body>
+</html>
