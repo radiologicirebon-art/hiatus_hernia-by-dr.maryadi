@@ -7,19 +7,19 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0e1a22;
-  --surface: #162330;
-  --surface2: #1c2c3a;
+  --bg: #f0f8ff;
+  --surface: #ffffff;
+  --surface2: #e8f4fb;
   --border: rgba(11,151,204,0.2);
   --border-bright: rgba(11,151,204,0.5);
   --blue: #0a97cc;
   --blue-dim: #2b7472;
-  --teal: #66c84b;
-  --amber: #f7a432;
-  --red: #f77369;
-  --text: #bfdee4;
-  --text-dim: rgba(191,222,228,0.6);
-  --text-faint: rgba(43,116,114,0.6);
+  --teal: #3aab28;
+  --amber: #d4860a;
+  --red: #d94f46;
+  --text: #14303d;
+  --text-dim: rgba(20,48,61,0.65);
+  --text-faint: rgba(43,116,114,0.55);
   --mono: 'JetBrains Mono', monospace;
   --serif: 'DM Serif Display', serif;
   --sans: 'Instrument Sans', sans-serif;
@@ -48,8 +48,8 @@ body {
   50%      { opacity: 0.8; transform: scale(1.04); }
 }
 @keyframes glow {
-  0%,100% { text-shadow: 0 0 20px rgba(11,151,204,0.4); }
-  50%      { text-shadow: 0 0 40px rgba(11,151,204,0.8), 0 0 80px rgba(11,151,204,0.3); }
+  0%,100% { text-shadow: 0 0 20px rgba(11,151,204,0.5); }
+  50%      { text-shadow: 0 0 40px rgba(11,151,204,0.8), 0 0 80px rgba(11,151,204,0.35); }
 }
 @keyframes flicker {
   0%,98%,100% { opacity:1; }
@@ -89,7 +89,7 @@ body {
 .poster::after {
   content:'';
   position:fixed; left:0; top:0; right:0; height:2px;
-  background: linear-gradient(transparent, rgba(11,151,204,0.06), transparent);
+  background: linear-gradient(transparent, rgba(11,151,204,0.1), transparent);
   animation: scanline 8s linear infinite;
   pointer-events:none;
   z-index:1;
@@ -97,9 +97,9 @@ body {
 
 /* ─── HEADER ─── */
 .header {
-  background: linear-gradient(160deg, #050510 0%, #162030 50%, #080814 100%);
+  background: linear-gradient(160deg, #050510 0%, #f4faff 50%, #080814 100%);
   padding: 0;
-  border-bottom: 1px solid var(--border-bright);
+  border-bottom: 2px solid rgba(11,151,204,0.4);
   position: relative;
   overflow: hidden;
   animation: fadeUp 0.6s ease both;
@@ -108,15 +108,15 @@ body {
 .header-bg-grid {
   position:absolute; inset:0;
   background-image:
-    linear-gradient(rgba(11,151,204,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(11,151,204,0.04) 1px, transparent 1px);
+    linear-gradient(rgba(11,151,204,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11,151,204,0.07) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
 .header-accent {
   position:absolute;
   width:400px; height:400px;
-  background: radial-gradient(circle, rgba(11,151,204,0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(11,151,204,0.18) 0%, transparent 70%);
   right:-100px; top:-100px;
   pointer-events:none;
 }
@@ -160,7 +160,7 @@ body {
   font-size: 52px;
   font-weight: 400;
   line-height: 1.0;
-  color: #fff;
+  color: #0d2535;
   margin-bottom: 6px;
   animation: glow 4s ease-in-out infinite;
 }
@@ -209,7 +209,7 @@ body {
 .presenter-name {
   font-family: var(--sans);
   font-size: 13px; font-weight:600;
-  color: rgba(191,222,228,0.8);
+  color: rgba(14,40,58,0.85);
   white-space:nowrap;
 }
 .presenter-role {
@@ -220,7 +220,7 @@ body {
 
 /* ─── ALERT STRIP ─── */
 .alert-strip {
-  background: linear-gradient(90deg, rgba(247,115,105,0.08) 0%, rgba(247,115,105,0.04) 100%);
+  background: linear-gradient(90deg, rgba(217,79,70,0.07) 0%, rgba(247,115,105,0.04) 100%);
   border-left: 3px solid var(--red);
   border-top: 1px solid rgba(247,115,105,0.12);
   border-bottom: 1px solid rgba(247,115,105,0.12);
@@ -234,10 +234,10 @@ body {
 .alert-text {
   font-family: var(--sans);
   font-size: 13px; font-style:italic;
-  color: #f77369;
+  color: #d94f46;
   line-height:1.4;
 }
-.alert-text strong { color:#f7a432; font-style:normal; }
+.alert-text strong { color:#d4860a; font-style:normal; }
 
 /* ─── CONTENT ─── */
 .content {
@@ -254,7 +254,7 @@ body {
   font-family: var(--mono);
   font-size: 9px; font-weight:700;
   color: var(--blue-dim);
-  background: rgba(11,151,204,0.08);
+  background: rgba(11,151,204,0.12);
   border: 1px solid rgba(11,151,204,0.15);
   padding: 3px 8px; border-radius:3px;
   letter-spacing:1px;
@@ -267,7 +267,7 @@ body {
 }
 .sec-line {
   flex:1; height:1px;
-  background: linear-gradient(90deg, rgba(11,151,204,0.25), transparent);
+  background: linear-gradient(90deg, rgba(11,151,204,0.3), transparent);
 }
 
 /* ─── EPI SECTION ─── */
@@ -283,6 +283,7 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(11,151,204,0.08);
   padding: 20px 22px;
   position:relative; overflow:hidden;
 }
@@ -322,7 +323,7 @@ body {
 .bar-val-new {
   font-family: var(--mono);
   font-size: 9px; font-weight:700;
-  color:rgba(255,255,255,0.9); z-index:1; position:relative;
+  color:rgba(255,255,255,0.95); z-index:1; position:relative;
 }
 .bar-lbl-new {
   font-family: var(--mono);
@@ -333,6 +334,7 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius:12px;
+  box-shadow: 0 2px 16px rgba(11,151,204,0.08);
   padding: 20px 22px;
   display:flex; flex-direction:column; justify-content:space-around;
   gap:0;
@@ -340,7 +342,7 @@ body {
 .stat-row {
   display:flex; align-items:center; gap:14px;
   padding: 12px 0;
-  border-bottom: 1px solid rgba(11,151,204,0.08);
+  border-bottom: 1px solid rgba(11,151,204,0.12);
 }
 .stat-row:last-child { border-bottom:none; }
 .stat-num-big {
@@ -350,7 +352,7 @@ body {
 .stat-num-big.c-blue { color: var(--blue); }
 .stat-num-big.c-teal { color: var(--teal); }
 .stat-num-big.c-amber { color: var(--amber); }
-.stat-label { font-size:12px; font-weight:600; color:rgba(191,222,228,0.85); margin-bottom:2px; }
+.stat-label { font-size:12px; font-weight:600; color:rgba(20,48,61,0.9); margin-bottom:2px; }
 .stat-sub { font-family:var(--mono); font-size:10px; color: var(--text-faint); }
 
 /* ─── CT SECTION ─── */
@@ -366,8 +368,8 @@ body {
 }
 
 .ct-panel-new {
-  background: #050000;
-  border: 1px solid rgba(11,151,204,0.25);
+  background: #0a1820;
+  border: 1px solid rgba(11,151,204,0.3);
   border-radius:10px;
   overflow:hidden;
   position:relative;
@@ -378,14 +380,14 @@ body {
 }
 
 .ct-screen-new {
-  background: #0e1a22;
+  background: #f0f8ff;
   padding: 6px;
   position:relative;
 }
 .ct-screen-new svg { display:block; width:100%; }
 
 .ct-bar {
-  background: rgba(18,30,40,0.95);
+  background: rgba(255,255,255,0.95);
   padding: 8px 14px;
   display:flex; justify-content:space-between; align-items:center;
   border-top: 1px solid rgba(11,151,204,0.15);
@@ -402,7 +404,7 @@ body {
 .ct-badge-new {
   font-family: var(--mono);
   font-size: 9px; padding:2px 8px; border-radius:10px;
-  background: rgba(11,151,204,0.12);
+  background: rgba(11,151,204,0.18);
   color: rgba(255,200,120,0.8);
   border: 1px solid rgba(11,151,204,0.2);
   letter-spacing:0.5px;
@@ -411,7 +413,7 @@ body {
 .ct-badge-new.amber { background:rgba(240,180,41,0.12); color:var(--amber); border-color:rgba(240,180,41,0.2); }
 
 .ct-ann-bar {
-  background: rgba(14,26,34,0.7);
+  background: rgba(240,248,255,0.7);
   padding: 8px 14px;
   border-top: 1px solid rgba(11,151,204,0.1);
 }
@@ -426,7 +428,7 @@ body {
 /* ─── WIDE CT PANEL ─── */
 .ct-panel-wide {
   background:#000;
-  border: 1px solid rgba(11,151,204,0.25);
+  border: 1px solid rgba(11,151,204,0.3);
   border-radius:10px; overflow:hidden;
   grid-column:1/-1; margin-top:4px;
   transition: border-color 0.2s;
@@ -449,7 +451,7 @@ body {
   gap:10px; margin-top:12px;
 }
 .ct-sum-card {
-  background: rgba(20,32,44,0.7);
+  background: rgba(232,244,251,0.7);
   border: 1px solid var(--border);
   border-radius:8px; padding:12px 14px;
   position:relative; overflow:hidden;
@@ -471,7 +473,7 @@ body {
 .ct-sum-title.amber { color:var(--amber); }
 
 .ct-sum-text {
-  font-size:11px; color:rgba(191,222,228,0.6); line-height:1.55;
+  font-size:11px; color:rgba(20,48,61,0.65); line-height:1.55;
 }
 
 /* ─── TYPES ─── */
@@ -488,6 +490,7 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius:10px;
+  box-shadow: 0 2px 12px rgba(11,151,204,0.06);
   padding: 16px 18px;
   display:grid; grid-template-columns:auto 1fr; gap:14px;
   align-items:start;
@@ -495,7 +498,7 @@ body {
 }
 .type-card:hover {
   border-color: rgba(247,163,50,0.3);
-  background: rgba(22,34,48,0.9);
+  background: rgba(228,242,250,0.9);
 }
 
 .type-num {
@@ -531,6 +534,7 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius:10px; padding:16px 18px;
+  box-shadow: 0 2px 12px rgba(11,151,204,0.06);
 }
 
 .info-row {
@@ -543,21 +547,21 @@ body {
 .info-dot.teal { background:var(--teal); }
 .info-dot.amber { background:var(--amber); }
 .info-dot.red { background:var(--red); }
-.info-txt { font-size:11.5px; color:rgba(191,222,228,0.6); line-height:1.55; }
-.info-txt strong { color:rgba(255,220,180,0.85); font-weight:600; }
+.info-txt { font-size:11.5px; color:rgba(20,48,61,0.65); line-height:1.55; }
+.info-txt strong { color:rgba(20,48,61,0.85); font-weight:600; }
 
 .diff-wrap { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
 .diff-chip {
-  background: rgba(247,115,105,0.07);
-  border: 1px solid rgba(247,115,105,0.18);
-  color: #f77369;
+  background: rgba(217,79,70,0.06);
+  border: 1px solid rgba(217,79,70,0.18);
+  color: #d94f46;
   font-size:11px; padding:4px 10px; border-radius:20px;
   font-family:var(--sans);
 }
 
 /* ─── FOOTER ─── */
 .footer {
-  background: rgba(10,20,28,0.8);
+  background: rgba(245,251,255,0.8);
   border-top: 1px solid var(--border);
   padding: 16px 48px;
   display:flex; justify-content:space-between; align-items:center;
@@ -566,7 +570,7 @@ body {
 .footer-left {
   font-size:11px; color:rgba(180,209,54,0.45); line-height:1.75;
 }
-.footer-left strong { color:rgba(11,151,204,0.75); font-weight:600; }
+.footer-left strong { color:rgba(11,151,204,0.85); font-weight:600; }
 .footer-right {
   font-family:var(--mono);
   font-size:8px; letter-spacing:2px; text-transform:uppercase;
@@ -584,8 +588,8 @@ body {
   gap: 10px;
 }
 .ct-photo-card {
-  background: #050000;
-  border: 1px solid rgba(11,151,204,0.3);
+  background: #0a1820;
+  border: 1px solid rgba(11,151,204,0.35);
   border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
@@ -595,7 +599,7 @@ body {
 .ct-photo-card:hover {
   border-color: rgba(11,151,204,0.7);
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 8px 30px rgba(11,151,204,0.35), 0 0 0 1px rgba(11,151,204,0.3);
+  box-shadow: 0 8px 30px rgba(11,151,204,0.35), 0 0 0 1px rgba(11,151,204,0.35);
   z-index: 2;
 }
 .ct-photo-card img {
@@ -610,7 +614,7 @@ body {
 .ct-photo-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(14,26,34,0.85) 100%);
+  background: linear-gradient(180deg, transparent 50%, rgba(240,248,255,0.85) 100%);
   pointer-events: none;
 }
 .ct-photo-label {
@@ -622,7 +626,7 @@ body {
   font-weight: 700;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: #f7a432;
+  color: #d4860a;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -655,8 +659,8 @@ body {
   max-width: 88vw;
   max-height: 80vh;
   border-radius: 10px;
-  border: 1px solid rgba(11,151,204,0.3);
-  box-shadow: 0 0 60px rgba(11,151,204,0.4), 0 0 120px rgba(11,151,204,0.15);
+  border: 1px solid rgba(11,151,204,0.35);
+  box-shadow: 0 0 60px rgba(11,151,204,0.5), 0 0 120px rgba(11,151,204,0.15);
   animation: lbIn 0.25s cubic-bezier(0.34,1.56,0.64,1) both;
 }
 @keyframes lbIn {
@@ -675,7 +679,7 @@ body {
   top: 24px; right: 32px;
   background: rgba(11,151,204,0.15);
   border: 1px solid rgba(11,151,204,0.35);
-  color: #bfdee4;
+  color: #14303d;
   font-size: 22px;
   width: 42px; height: 42px;
   border-radius: 50%;
@@ -686,16 +690,16 @@ body {
   line-height: 1;
 }
 #lightbox-close:hover {
-  background: rgba(11,151,204,0.4);
+  background: rgba(11,151,204,0.5);
   border-color: rgba(11,151,204,0.5);
-  color: #ffff00;
+  color: #0d2535f00;
 }
 #lightbox-nav {
   display: flex; gap: 12px;
 }
 .lb-nav-btn {
-  background: rgba(11,151,204,0.12);
-  border: 1px solid rgba(11,151,204,0.3);
+  background: rgba(11,151,204,0.18);
+  border: 1px solid rgba(11,151,204,0.35);
   color: rgba(11,151,204,0.8);
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
@@ -706,8 +710,8 @@ body {
   letter-spacing: 1px;
 }
 .lb-nav-btn:hover {
-  background: rgba(11,151,204,0.3);
-  color: #ffff00;
+  background: rgba(11,151,204,0.35);
+  color: #0d2535f00;
 }
 
 
@@ -719,7 +723,7 @@ body {
   gap: 10px;
 }
 .ct-real-panel {
-  background: #000;
+  background: #0a1820;
   border: 1px solid rgba(11,151,204,0.2);
   border-radius: 12px;
   overflow: hidden;
@@ -741,7 +745,7 @@ body {
 .ct-real-img-wrap {
   position: relative;
   flex: 1;
-  background: #000;
+  background: #0a1820;
   overflow: hidden;
   min-height: 200px;
 }
@@ -759,7 +763,7 @@ body {
 }
 .ct-3d-img {
   object-fit: contain;
-  background: #000;
+  background: #0a1820;
   max-height: 280px;
 }
 .ct-real-corner {
@@ -772,7 +776,7 @@ body {
   padding: 5px 8px;
   pointer-events: none;
 }
-.ct-real-corner.tl { top: 0; left: 0; color: rgba(191,222,228,0.55); }
+.ct-real-corner.tl { top: 0; left: 0; color: rgba(20,48,61,0.6); }
 .ct-real-corner.tr { top: 0; right: 0; color: rgba(180,209,54,0.55); text-align: right; }
 .ct-real-corner.bl { bottom: 30px; left: 8px; color: rgba(247,163,50,0.6); }
 .ct-real-corner.br { bottom: 30px; right: 8px; color: rgba(247,163,50,0.6); }
@@ -807,8 +811,8 @@ body {
   flex-shrink: 0;
   box-shadow: 0 0 6px currentColor;
 }
-.ct-ann-dot.orange { background: #f7a432; color: #f7a432; }
-.ct-ann-dot.yellow { background: #ffff00; color: #ffff00; }
+.ct-ann-dot.orange { background: #d4860a; color: #d4860a; }
+.ct-ann-dot.yellow { background: #ffff00; color: #0d2535f00; }
 .ct-ann-line-h {
   width: 20px; height: 1px;
   background: rgba(11,151,204,0.6);
@@ -825,12 +829,12 @@ body {
 }
 .ct-ann-tag.orange { 
   background: rgba(247,163,50,0.2); 
-  color: #f7a432; 
+  color: #d4860a; 
   border: 1px solid rgba(247,163,50,0.35);
 }
 .ct-ann-tag.yellow { 
   background: rgba(180,209,54,0.15); 
-  color: #ffff00; 
+  color: #0d2535f00; 
   border: 1px solid rgba(180,209,54,0.3);
 }
 
@@ -850,12 +854,12 @@ body {
 }
 
 .ct-real-bar {
-  background: rgba(14,26,34,0.97);
+  background: rgba(240,248,255,0.97);
   padding: 8px 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid rgba(11,151,204,0.12);
+  border-top: 1px solid rgba(11,151,204,0.18);
   flex-shrink: 0;
 }
 .ct-rbar-label {
@@ -871,7 +875,7 @@ body {
   padding: 2px 8px;
   border-radius: 10px;
   background: rgba(11,151,204,0.1);
-  color: rgba(180,209,54,0.8);
+  color: rgba(58,171,40,0.9);
   border: 1px solid rgba(11,151,204,0.2);
   letter-spacing: 0.5px;
 }
@@ -881,7 +885,7 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 6px 20px;
   margin-top: 10px;
-  background: rgba(14,26,36,0.6);
+  background: rgba(240,248,255,0.6);
   border: 1px solid rgba(11,151,204,0.1);
   border-radius: 8px;
   padding: 12px 16px;
@@ -892,14 +896,14 @@ body {
   gap: 8px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 9.5px;
-  color: rgba(191,222,228,0.55);
+  color: rgba(20,48,61,0.6);
 }
 .ct-ann-bullet {
   width: 5px; height: 5px;
   border-radius: 50%;
   flex-shrink: 0;
 }
-.ct-ann-bullet.orange { background: #f7a432; }
+.ct-ann-bullet.orange { background: #d4860a; }
 .ct-ann-bullet.yellow { background: #ffff00; }
 
 </style>
@@ -962,7 +966,7 @@ body {
             <div class="bar-lbl-new">30–40</div>
           </div>
           <div class="bar-col-new">
-            <div class="bar-new" style="height:36%;background:linear-gradient(180deg,#66c84b,#2b7472);animation-delay:0.2s"><span class="bar-val-new">~20%</span></div>
+            <div class="bar-new" style="height:36%;background:linear-gradient(180deg,#3aab28,#2b7472);animation-delay:0.2s"><span class="bar-val-new">~20%</span></div>
             <div class="bar-lbl-new">40–50</div>
           </div>
           <div class="bar-col-new">
@@ -970,17 +974,17 @@ body {
             <div class="bar-lbl-new">50–60</div>
           </div>
           <div class="bar-col-new">
-            <div class="bar-new" style="height:72%;background:linear-gradient(180deg,#ffff00,#66c84b);animation-delay:0.3s"><span class="bar-val-new">~40%</span></div>
+            <div class="bar-new" style="height:72%;background:linear-gradient(180deg,#ffff00,#3aab28);animation-delay:0.3s"><span class="bar-val-new">~40%</span></div>
             <div class="bar-lbl-new">60–70</div>
           </div>
           <div class="bar-col-new">
-            <div class="bar-new" style="height:92%;background:linear-gradient(180deg,#ffff00,#66c84b);box-shadow:0 0 12px rgba(180,209,54,0.35);animation-delay:0.35s"><span class="bar-val-new">~50%</span></div>
+            <div class="bar-new" style="height:92%;background:linear-gradient(180deg,#ffff00,#3aab28);box-shadow:0 0 12px rgba(180,209,54,0.35);animation-delay:0.35s"><span class="bar-val-new">~50%</span></div>
             <div class="bar-lbl-new">&gt;70</div>
           </div>
         </div>
         <div style="display:flex;gap:16px;margin-top:10px;">
           <span style="display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;color:var(--text-faint);">
-            <span style="width:8px;height:8px;border-radius:2px;background:#66c84b;display:inline-block;"></span>Below 50 yrs
+            <span style="width:8px;height:8px;border-radius:2px;background:#3aab28;display:inline-block;"></span>Below 50 yrs
           </span>
           <span style="display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;color:var(--text-faint);">
             <span style="width:8px;height:8px;border-radius:2px;background:#ffff00;display:inline-block;"></span>Above 60 yrs (high risk)
@@ -1026,8 +1030,8 @@ body {
     <div class="ct-photo-section">
       <div class="sec-head" style="margin-bottom:12px;">
         <div class="sec-number" style="color:rgba(11,151,204,0.8);">02a</div>
-        <div class="sec-title" style="color:#f7a432;">Foto CT Scan Asli — Klik untuk perbesar</div>
-        <div class="sec-line" style="background:linear-gradient(90deg,rgba(11,151,204,0.4),transparent);"></div>
+        <div class="sec-title" style="color:#d4860a;">Foto CT Scan Asli — Klik untuk perbesar</div>
+        <div class="sec-line" style="background:linear-gradient(90deg,rgba(11,151,204,0.5),transparent);"></div>
       </div>
       <div class="ct-photo-grid">
         <div class="ct-photo-card" onclick="openLightbox(0)" title="Klik untuk perbesar">
@@ -1118,7 +1122,7 @@ body {
             </div>
           </div>
           <div class="ct-real-bar">
-            <span class="ct-rbar-label" style="color:#f7a432">Axial #1</span>
+            <span class="ct-rbar-label" style="color:#d4860a">Axial #1</span>
             <span class="ct-rbar-badge">W400/L40 · 5mm</span>
           </div>
         </div>
@@ -1139,7 +1143,7 @@ body {
             </div>
           </div>
           <div class="ct-real-bar">
-            <span class="ct-rbar-label" style="color:#f7a432">Axial #2</span>
+            <span class="ct-rbar-label" style="color:#d4860a">Axial #2</span>
             <span class="ct-rbar-badge">Upper level</span>
           </div>
         </div>
@@ -1203,8 +1207,8 @@ body {
             <div class="ct-3d-badge">3D Volume Render · VRT Reconstruction</div>
           </div>
           <div class="ct-real-bar">
-            <span class="ct-rbar-label" style="color:#f7a432">3D VR Reconstruction</span>
-            <span class="ct-rbar-badge" style="background:rgba(247,163,50,0.15);color:#f7a432;border-color:rgba(247,163,50,0.3)">VRT recon</span>
+            <span class="ct-rbar-label" style="color:#d4860a">3D VR Reconstruction</span>
+            <span class="ct-rbar-badge" style="background:rgba(247,163,50,0.15);color:#d4860a;border-color:rgba(247,163,50,0.3)">VRT recon</span>
           </div>
         </div>
 
@@ -1289,19 +1293,19 @@ body {
 
     <div class="bottom-row">
       <div class="bot-card">
-        <div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(11,151,204,0.12);">Presentasi Klinis</div>
+        <div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(11,151,204,0.18);">Presentasi Klinis</div>
         <div class="info-row"><div class="info-dot blue"></div><div class="info-txt">Sering <strong>asimptomatik</strong> — temuan insidental</div></div>
         <div class="info-row"><div class="info-dot teal"></div><div class="info-txt">Nyeri epigastrik, mual, muntah <em style="color:rgba(180,209,54,0.6)">(kasus ini)</em></div></div>
         <div class="info-row"><div class="info-dot amber"></div><div class="info-txt">Korelasi buruk dengan <strong>GERD</strong> — tidak sinonim!</div></div>
       </div>
       <div class="bot-card">
-        <div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(11,151,204,0.12);">Tatalaksana</div>
+        <div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(11,151,204,0.18);">Tatalaksana</div>
         <div class="info-row"><div class="info-dot teal"></div><div class="info-txt"><strong>Bedah</strong> — untuk tipe 2–4 simptomatik. Laparoskopik fundoplikasi.</div></div>
         <div class="info-row"><div class="info-dot amber"></div><div class="info-txt"><strong>Konservatif</strong> — lansia/komorbid tinggi, asimptomatik.</div></div>
         <div class="info-row"><div class="info-dot red"></div><div class="info-txt"><strong>Komplikasi:</strong> volvulus gaster, tension gastrothorax</div></div>
       </div>
       <div class="bot-card">
-        <div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(11,151,204,0.12);">Diagnosis Banding</div>
+        <div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(11,151,204,0.18);">Diagnosis Banding</div>
         <div class="diff-wrap">
           <div class="diff-chip">Abses paru retrokardiak</div>
           <div class="diff-chip">Empiema retrokardiak</div>
